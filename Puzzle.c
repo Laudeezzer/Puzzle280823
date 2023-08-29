@@ -1,13 +1,13 @@
 //Feito por Jeremias Fenias Jorge e Laudo de Sousa David
-#include <stdlib.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 
 // Tamanho do puzzle
 #define N 3
-int i,j;
 // Função para verificar se um estado é o objetivo
 int teste_objeto(int estado[][N], int objetivo[][N]) {
+	int i,j;
     for (i = 0; i < N; i++) {
         for ( j = 0; j < N; j++) {
             if (estado[i][j] != objetivo[i][j]) {
@@ -18,29 +18,67 @@ int teste_objeto(int estado[][N], int objetivo[][N]) {
     return 1; // É o objetivo
 }
 // Função para encontrar a posição do espaço vazio
-struct posicao{
-	int linha,coluna;
-}Posicao;
-void localizar_zero(int estado[][N],posicao *local){
+int localizarZeroLinha(int estado[N][N]){
 	int i,j;
-	tam=N;
-	for(i=0;i<tam;i++){
-		for(j=0;j<tam;j++){
+	for(i=0;i<N;i++){
+		for(j=0;j<N;j++){
 			if(estado[i][j]==0){
-				local->linha = i;
-				local->coluna = j;
-				return local; 
+				printf("%d\n",i);
+				break; 
+			}
+		}
+		return i;
+	}
+}
+int localizarZeroColuna(int estado[N][N]){
+	int i,j;
+	for(i=0;i<N;i++){
+		for(j=0;j<N;j++){
+			if(estado[i][j]==0){
+				printf("%d\n",j);
+				break;
 			}
 		}
 	}
+	return j;
+}
+// Função para troca
+void trocacima(){
+	
+}
+void trocabaixo(){
+	
+}
+void trocaesquerda(){
+	
+}
+void trocadireita(){
+	
 }
 // Função para gerar os estados subsequentes com base no estado atual
-void modelo_transicao(int estado[][N]) {
-	if(N=3){
-		printf("Yes")
+void modelo_transicao(int estado[N][N], int linha, int coluna) {
+	if (linha>=0 && coluna>=0 && linha<N && coluna<N){
+		if(linha >= 0 && linha<N){
+			trocabaixo();
+			if(coluna >= 0 && coluna < N){
+				trocadireita();
+			}else if(coluna > 0 && coluna <= N){
+				trocaesquerda();
+			}
+		}else if(linha > 0 && linha<=N){
+			trocacima();
+			if(coluna >= 0 && coluna < N){
+				trocadireita();
+			}else if(coluna > 0 && coluna <= N){
+				trocaesquerda();
+		}
+	}else{
+		system("cls");
+		printf("algo de errado nao esta certo");
 	}
-	
-}/*
+}
+}
+/*
 void modelo_transicaoo(int estado[][N], int novos_estados[][N][N], int *num_estados) {
     // Implemente a lógica para gerar os novos estados
     // Atualize o valor de num_estados
@@ -48,6 +86,7 @@ void modelo_transicaoo(int estado[][N], int novos_estados[][N][N], int *num_esta
 */
 // Função para imprimir um estado do puzzle
 void imprimir(int estado[][N]) {
+	int i,j;
     for (i = 0; i < N; i++) {
         for (j = 0; j < N; j++) {
             printf("%2d ", estado[i][j]);
@@ -71,18 +110,19 @@ int main() {
     };
 
 //    int num_estados = 0;
-	printf("Estado Inicial");
-    imprimir(estado_inicial);
-
+	printf("Estado Inicial\n");
+//    imprimir(estado_inicial);
+	int linha = localizarZeroLinha(estado_inicial);
+	int coluna = localizarZeroColuna(estado_inicial);
     while (!teste_objeto(estado_inicial, objetivo)) {
 //        int novos_estados[N*N][N][N];
-        modelo_transicao(estado_inicial);
+        modelo_transicao(estado_inicial,linha,coluna);
         
         // Selecionar um novo estado e atualizar estado_inicial
         // (lógica para escolher o próximo estado)
 
         imprimir(estado_inicial);
-    usleep(2000);
+    usleep(5000);
     }
 
     printf("Puzzle resolvido!\n");
